@@ -67,7 +67,6 @@ bn::string_view reaction_label(ReactionType rt) {
 int main() {
     bn::core::init();
 
-    // Custom 8x8 ASCII Font
     bn::sprite_font ascii_font(bn::sprite_items::font_8x8);
     bn::sprite_text_generator text_gen(ascii_font);
     text_gen.set_bg_priority(0);
@@ -81,7 +80,6 @@ int main() {
 
     world.load_region(RegionID::SKY_ISLET, camera);
 
-    // Create World Sprites
     bn::fixed_point player_pos(0, -16);
     bn::sprite_ptr hero_spr = bn::sprite_items::hero_sprite.create_sprite(player_pos);
     hero_spr.set_camera(camera);
@@ -98,7 +96,8 @@ int main() {
     int enemy_respawn_timer = 0;
     EssenceAura enemy_aura;
 
-    bn::fixed stamina = save.max_stamina;
+    int stamina = static_cast<int>(save.max_stamina);
+    int stamina_tick = 0;
     bn::string_view popup_text = "";
     int popup_timer = 0;
 
@@ -107,21 +106,25 @@ int main() {
     while (true) {
         party.update_cooldowns();
 
-        // Handle Dialogue Box Dismissal
         if (quests.is_dialogue_open()) {
             if (bn::keypad::a_pressed() || bn::keypad::b_pressed()) {
                 quests.close_dialogue();
             }
         } else {
-            // 1. Movement & Stamina Dash (R Button)
-            bn::fixed speed(1.4);
-            if (bn::keypad::r_held() && stamina > bn::fixed(1)) {
-                speed = bn::fixed(2.5);
-                stamina -= bn::fixed(0.7);
-            } else if (stamina < bn::fixed(save.max_stamina)) {
-                stamina += bn::fixed(0.4);
+            int speed_int = 1;
+            ++stamina_tick;
+            if (bn::keypad::r_held() && stamina > 1) {
+                speed_int = 2;
+                if (stamina_tick % 4 == 0) {
+                    --stamina;
+                }
+            } else if (stamina < static_cast<int>(save.max_stamina)) {
+                if (stamina_tick % 6 == 0) {
+                    ++stamina;
+                }
             }
 
+            bn::fixed speed(speed_int);
             bn::fixed_point next_pos = player_pos;
             if (bn::keypad::left_held())  { next_pos.set_x(next_pos.x() - speed); hero_spr.set_horizontal_flip(true); }
             if (bn::keypad::right_held()) { next_pos.set_x(next_pos.x() + speed); hero_spr.set_horizontal_flip(false); }
@@ -132,7 +135,6 @@ int main() {
                 player_pos = next_pos;
             }
 
-            // Check Region Portal (Floating Island <-> Bamboo Valley <-> Underwater)
             RegionID target_region;
             bn::fixed_point spawn_pos;
             if (world.check_region_portal(player_pos.x(), player_pos.y(), target_region, spawn_pos)) {
@@ -147,7 +149,6 @@ int main() {
                 }
             }
 
-            // 2. Fast-Swap Active Party Member (L Button)
             if (bn::keypad::l_pressed()) {
                 if (party.swap_next_member()) {
                     const auto& new_tpl = get_character_template(party.active_character_id());
@@ -156,18 +157,17 @@ int main() {
                 }
             }
 
-            // 3. Interact / Talk (A near NPC) OR Essence Attack (A in combat)
             if (bn::keypad::a_pressed()) {
-                bn::fixed dx_npc = bn::abs(player_pos.x() - npc_pos.x());
-                bn::fixed dy_npc = bn::abs(player_pos.y() - npc_pos.y());
+                int dx_npc = bn::abs((player_pos.x() - npc_pos.x()).integer());
+                int dy_npc = bn::abs((player_pos.y() - npc_pos.y()).integer());
 
-                if (dx_npc < bn::fixed(22) && dy_npc < bn::fixed(22)) {
+                if (dx_npc < 22 && dy_npc < 22) {
                     quests.interact_with_npc(party, save);
                 } else if (enemy_hp > 0) {
-                    bn::fixed dx_en = bn::abs(player_pos.x() - enemy_pos.x());
-                    bn::fixed dy_en = bn::abs(player_pos.y() - enemy_pos.y());
+                    int dx_en = bn::abs((player_pos.x() - enemy_pos.x()).integer());
+                    int dy_en = bn::abs((player_pos.y() - enemy_pos.y()).integer());
 
-                    if (dx_en < bn::fixed(32) && dy_en < bn::fixed(32)) {
+                    if (dx_en < 32 && dy_en < 32) {
                         auto& active_state = party.active_character_state();
                         const auto& tpl = get_character_template(party.active_character_id());
 
@@ -194,7 +194,6 @@ int main() {
             }
         }
 
-        // Enemy Respawn & Aura Tick
         if (enemy_hp <= 0 && enemy_respawn_timer > 0) {
             --enemy_respawn_timer;
             if (enemy_respawn_timer == 0) {
@@ -213,13 +212,11 @@ int main() {
             --popup_timer;
         }
 
-        // Update Camera & Sprite Positions
         camera.set_position(player_pos);
         hero_spr.set_position(player_pos);
         npc_spr.set_position(npc_pos);
         enemy_spr.set_position(enemy_pos);
 
-        // Render Crisp GBA Top & Bottom HUD
         hud_sprites.clear();
         const auto& active_tpl = get_character_template(party.active_character_id());
         const auto& active_st = party.active_character_state();
@@ -236,7 +233,7 @@ int main() {
         top_line2.append("HP:");
         top_line2.append(bn::to_string<8>(active_st.current_hp));
         top_line2.append(" STM:");
-        top_line2.append(bn::to_string<8>(stamina.integer()));
+        top_line2.append(bn::to_string<8>(stamina));
         top_line2.append(" $:");
         top_line2.append(bn::to_string<8>(save.jade_taels));
         text_gen.generate(-114, -62, top_line2, hud_sprites);

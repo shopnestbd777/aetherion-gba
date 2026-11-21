@@ -18,6 +18,10 @@ jobs:
         run: |
           git clone --depth 1 https://github.com/GValiente/butano.git /opt/butano
 
+      - name: Generate Pixel Art Sprites & Tiles
+        run: |
+          python3 tools/generate_assets.py
+
       - name: Compile GBA ROM
         run: |
           make -j$(nproc)
@@ -27,4 +31,3 @@ jobs:
         with:
           name: aetherion-gba-rom
           path: "*.gba"
-          

@@ -19,8 +19,8 @@ MAKERCODE    := 01
 VERSION      := 0
 
 # 32KB SRAM Save Support for Open-World Progress
-USERFLAGS    := -DBN_CFG_SRAM_WAIT_STATE=BN_SRAM_WAIT_STATE_8
-USERCXXFLAGS := -std=c++20 -O2 -Wall -Wextra
+USERFLAGS    := -DBN_CFG_SRAM_WAIT_STATE=BN_SRAM_WAIT_STATE_8 -Wno-unused-parameter
+USERCXXFLAGS := -std=c++17 -O1
 USERASFLAGS  :=
 USERLDFLAGS  :=
 

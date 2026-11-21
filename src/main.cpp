@@ -114,12 +114,12 @@ int main() {
             }
         } else {
             // 1. Movement & Stamina Dash (R Button)
-            bn::fixed speed = 1.4;
-            if (bn::keypad::r_held() && stamina > 1) {
-                speed = 2.5;
-                stamina -= 0.7;
-            } else if (stamina < save.max_stamina) {
-                stamina += 0.4;
+            bn::fixed speed(1.4);
+            if (bn::keypad::r_held() && stamina > bn::fixed(1)) {
+                speed = bn::fixed(2.5);
+                stamina -= bn::fixed(0.7);
+            } else if (stamina < bn::fixed(save.max_stamina)) {
+                stamina += bn::fixed(0.4);
             }
 
             bn::fixed_point next_pos = player_pos;
@@ -161,13 +161,13 @@ int main() {
                 bn::fixed dx_npc = bn::abs(player_pos.x() - npc_pos.x());
                 bn::fixed dy_npc = bn::abs(player_pos.y() - npc_pos.y());
 
-                if (dx_npc < 22 && dy_npc < 22) {
+                if (dx_npc < bn::fixed(22) && dy_npc < bn::fixed(22)) {
                     quests.interact_with_npc(party, save);
                 } else if (enemy_hp > 0) {
                     bn::fixed dx_en = bn::abs(player_pos.x() - enemy_pos.x());
                     bn::fixed dy_en = bn::abs(player_pos.y() - enemy_pos.y());
 
-                    if (dx_en < 32 && dy_en < 32) {
+                    if (dx_en < bn::fixed(32) && dy_en < bn::fixed(32)) {
                         auto& active_state = party.active_character_state();
                         const auto& tpl = get_character_template(party.active_character_id());
 
@@ -186,7 +186,7 @@ int main() {
                         if (enemy_hp <= 0) {
                             enemy_hp = 0;
                             enemy_spr.set_visible(false);
-                            enemy_respawn_timer = 240; // Respawns in 4 seconds
+                            enemy_respawn_timer = 240;
                             quests.notify_enemy_defeated(party, save);
                         }
                     }

@@ -2,8 +2,10 @@
 #define WORLD_ENGINE_H
 
 #include "game_types.h"
+#include "bn_optional.h"
 #include "bn_regular_bg_ptr.h"
 #include "bn_regular_bg_map_ptr.h"
+#include "bn_regular_bg_map_item.h"
 #include "bn_regular_bg_map_cell.h"
 #include "bn_camera_ptr.h"
 #include "bn_fixed_point.h"

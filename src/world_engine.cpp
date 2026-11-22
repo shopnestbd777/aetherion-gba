@@ -1,5 +1,6 @@
 #include "world_engine.h"
-#include "bn_regular_bg_items_world_tiles.h"
+#include "bn_regular_bg_tiles_items_world_tiles.h"
+#include "bn_bg_palette_items_world_tiles.h"
 #include "bn_regular_bg_map_cell_info.h"
 
 namespace aetherion {
@@ -79,8 +80,8 @@ void WorldEngine::load_region(RegionID region, bn::camera_ptr& camera) {
 
     _map_item.emplace(_cells[0], bn::size(MAP_COLS, MAP_ROWS));
     bn::regular_bg_item bg_item(
-        bn::regular_bg_items::world_tiles.tiles_item(),
-        bn::regular_bg_items::world_tiles.palette_item(),
+        bn::regular_bg_tiles_items::world_tiles,
+        bn::bg_palette_items::world_tiles,
         *_map_item
     );
 

@@ -182,7 +182,7 @@ write_4bpp_bmp("graphics/world_tiles.bmp", 8, 64, tile_pal, tiles_px)
 write_json("graphics/world_tiles.json", {
     "type": "regular_bg_tiles",
     "bpp_mode": "bpp_4",
-    "create_palette": true
+    "create_palette": True
 })
 
 # 5. Generate Crisp 8x8 ASCII Font Sprite Sheet (95 printable chars: 8 x 760)

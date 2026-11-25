@@ -1,5 +1,6 @@
 #include "world_engine.h"
 #include "bn_regular_bg_tiles_items_world_tiles.h"
+#include "bn_bg_palette_items_world_tiles.h"
 #include "bn_regular_bg_map_cell_info.h"
 
 namespace aetherion {
@@ -15,8 +16,8 @@ bn::string_view WorldEngine::current_region_name() const {
         case RegionID::SKY_ISLET:     return "SKY ISLET";
         case RegionID::BAMBOO_VALLEY: return "BAMBOO VALE";
         case RegionID::SUNKEN_TORII:  return "SUNKEN TORII";
+        default:                      return "AETHERION";
     }
-    return "AETHERION";
 }
 
 void WorldEngine::load_region(RegionID region, bn::camera_ptr& camera) {
@@ -80,7 +81,7 @@ void WorldEngine::load_region(RegionID region, bn::camera_ptr& camera) {
     _map_item.emplace(_cells[0], bn::size(MAP_COLS, MAP_ROWS));
     bn::regular_bg_item bg_item(
         bn::regular_bg_tiles_items::world_tiles,
-        bn::regular_bg_tiles_items::world_tiles.palette_item(),
+        bn::bg_palette_items::world_tiles,
         *_map_item
     );
 
@@ -96,7 +97,7 @@ uint8_t WorldEngine::tile_at_world(bn::fixed world_x, bn::fixed world_y) const {
         return 0;
     }
     bn::regular_bg_map_cell_info info(_cells[ty * MAP_COLS + tx]);
-    return static_cast<uint8_t>(info.tile_id());
+    return static_cast<uint8_t>(info.tile_index());
 }
 
 bool WorldEngine::is_walkable(bn::fixed world_x, bn::fixed world_y) const {

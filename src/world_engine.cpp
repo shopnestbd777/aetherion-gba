@@ -1,4 +1,5 @@
 #include "world_engine.h"
+#include "bn_regular_bg_item.h"
 #include "bn_regular_bg_tiles_items_world_tiles.h"
 #include "bn_regular_bg_map_cell_info.h"
 
@@ -72,7 +73,7 @@ void WorldEngine::load_region(RegionID region, bn::camera_ptr& camera) {
 
             bn::regular_bg_map_cell cell = 0;
             bn::regular_bg_map_cell_info info(cell);
-            info.set_tile_id(tile_id);
+            info.set_tile_index(tile_id);
             _cells[y * MAP_COLS + x] = info.cell();
         }
     }

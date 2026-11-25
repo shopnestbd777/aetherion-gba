@@ -179,7 +179,11 @@ for t in range(8):
             tiles_px.append(c)
 
 write_4bpp_bmp("graphics/world_tiles.bmp", 8, 64, tile_pal, tiles_px)
-write_json("graphics/world_tiles.json", {"type": "regular_bg_tiles", "bpp_mode": "bpp_4"})
+write_json("graphics/world_tiles.json", {
+    "type": "regular_bg_tiles",
+    "bpp_mode": "bpp_4",
+    "create_palette": true
+})
 
 # 5. Generate Crisp 8x8 ASCII Font Sprite Sheet (95 printable chars: 8 x 760)
 FONT_5X7 = {

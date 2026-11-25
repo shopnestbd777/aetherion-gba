@@ -12,8 +12,8 @@ bn::string_view QuestDialogueManager::active_quest_title() const {
         case StoryStage::PROLOGUE_SLIME_TRIAL: return "Q1:SLAY BLAZE SLIME";
         case StoryStage::ACT1_DESCEND_VALLEY:  return "Q2:STEP ON RED GATE";
         case StoryStage::ACT1_MEIHUA_JOINED:   return "Q3:PRESS L TO SWAP!";
+        default:                               return "EXPLORE AETHERION";
     }
-    return "EXPLORE AETHERION";
 }
 
 void QuestDialogueManager::open_dialogue(bn::string_view speaker, bn::string_view line) {

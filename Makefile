@@ -20,7 +20,7 @@ VERSION      := 0
 
 # 32KB SRAM Save Support for Open-World Progress
 USERFLAGS    := -DBN_CFG_SRAM_WAIT_STATE=BN_SRAM_WAIT_STATE_8 -Wno-unused-parameter
-USERCXXFLAGS := -std=c++20 -O1
+USERCXXFLAGS := -std=c++20 -O1 -Wno-c++23-extensions
 USERASFLAGS  :=
 USERLDFLAGS  :=
 

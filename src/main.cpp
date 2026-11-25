@@ -29,8 +29,8 @@ bn::string_view rank_label(CharRank r) {
         case CharRank::A_RANK: return "A";
         case CharRank::B_RANK: return "B";
         case CharRank::C_RANK: return "C";
+        default:               return "C";
     }
-    return "C";
 }
 
 bn::string_view essence_label(Essence e) {
@@ -43,8 +43,8 @@ bn::string_view essence_label(Essence e) {
         case Essence::TERRA:   return "TERRA";
         case Essence::ASTRAL:  return "ASTRAL";
         case Essence::NONE:    return "NONE";
+        default:               return "NONE";
     }
-    return "NONE";
 }
 
 bn::string_view reaction_label(ReactionType rt) {
@@ -58,8 +58,8 @@ bn::string_view reaction_label(ReactionType rt) {
         case ReactionType::VORTEX_SPREAD: return "VORTEX SPREAD!";
         case ReactionType::JADE_WARD:     return "JADE WARD!";
         case ReactionType::NONE:          return "";
+        default:                          return "";
     }
-    return "";
 }
 
 } // namespace
@@ -221,7 +221,7 @@ int main() {
         const auto& active_tpl = get_character_template(party.active_character_id());
         const auto& active_st = party.active_character_state();
 
-        bn::string<40> top_line1;
+        bn::string<48> top_line1;
         top_line1.append(active_tpl.name);
         top_line1.append(" [");
         top_line1.append(rank_label(active_tpl.rank));
@@ -229,7 +229,7 @@ int main() {
         top_line1.append(essence_label(active_st.active_essence));
         text_gen.generate(-114, -72, top_line1, hud_sprites);
 
-        bn::string<40> top_line2;
+        bn::string<48> top_line2;
         top_line2.append("HP:");
         top_line2.append(bn::to_string<8>(active_st.current_hp));
         top_line2.append(" STM:");
@@ -238,7 +238,7 @@ int main() {
         top_line2.append(bn::to_string<8>(save.jade_taels));
         text_gen.generate(-114, -62, top_line2, hud_sprites);
 
-        bn::string<40> region_line;
+        bn::string<64> region_line;
         region_line.append(world.current_region_name());
         if (enemy_hp > 0 && enemy_aura.element != Essence::NONE) {
             region_line.append(" [FOE:");
@@ -261,4 +261,3 @@ int main() {
         bn::core::update();
     }
 }
-

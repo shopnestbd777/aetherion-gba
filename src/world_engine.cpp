@@ -1,7 +1,8 @@
 #include "world_engine.h"
+#include "bn_color.h"
+#include "bn_bg_palette_item.h"
 #include "bn_regular_bg_item.h"
 #include "bn_regular_bg_tiles_items_world_tiles.h"
-#include "bn_bg_palette_items_world_tiles.h"
 #include "bn_regular_bg_map_cell_info.h"
 
 namespace aetherion {
@@ -79,10 +80,30 @@ void WorldEngine::load_region(RegionID region, bn::camera_ptr& camera) {
         }
     }
 
-        _map_item.emplace(_cells[0], bn::size(MAP_COLS, MAP_ROWS));
+    constexpr bn::color palette_colors[16] = {
+        bn::color(9, 16, 24),   // 0: Sky azure
+        bn::color(28, 30, 31),  // 1: Cloud white
+        bn::color(10, 18, 16),  // 2: Jade stone base
+        bn::color(14, 23, 20),  // 3: Jade stone highlight
+        bn::color(28, 23, 9),   // 4: Celestial gold trim
+        bn::color(8, 18, 9),    // 5: Bamboo grass
+        bn::color(12, 22, 12),  // 6: Grass blade highlight
+        bn::color(21, 20, 18),  // 7: Stone path
+        bn::color(24, 7, 7),    // 8: Torii vermilion
+        bn::color(5, 13, 23),   // 9: Deep river/sea water
+        bn::color(11, 21, 29),  // 10: Water ripple
+        bn::color(6, 17, 18),   // 11: Underwater teal sand
+        bn::color(27, 14, 18),  // 12: Underwater pink coral
+        bn::color(0, 0, 0),
+        bn::color(0, 0, 0),
+        bn::color(0, 0, 0),
+    };
+
+    _map_item.emplace(_cells[0], bn::size(MAP_COLS, MAP_ROWS));
+    bn::bg_palette_item palette_item(palette_colors, bn::bpp_mode::BPP_4);
     bn::regular_bg_item bg_item(
         bn::regular_bg_tiles_items::world_tiles,
-        bn::bg_palette_items::world_tiles,
+        palette_item,
         *_map_item
     );
 
